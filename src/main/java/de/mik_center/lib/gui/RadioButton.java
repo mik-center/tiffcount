@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Button;
  * This class extends {@code FormElement} because it has the fundamental
  * characteristics of a GUI element.
  * 
- * @param T type of the result value
+ * @param <T> type of the result value
  */
 public class RadioButton<T> extends FormElement {
 
@@ -41,7 +41,7 @@ public class RadioButton<T> extends FormElement {
      * @param value  result value if this selection has been made by the user. If
      *               {@code null}, returns {@code null} as result.
      */
-    public RadioButton(RadioButtonChoice<T> choice, int left, int top, int width, int height, String text, T value) {
+    public RadioButton(RadioSelect<T> choice, int left, int top, int width, int height, String text, T value) {
         super(choice.form);
 
         assert width >= 0 : "width must not be negative";

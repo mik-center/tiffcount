@@ -24,7 +24,7 @@ public final class TiffcountMainForm extends Form {
 
     private final Edit startingPathEdit;
     private final ImageButton startPathPickerButton;
-    private final RadioButtonChoice<ReportingType> reportingType;
+    private final RadioSelect<ReportingType> reportingType;
     private final Edit reportsPathEdit;
     private final ImageButton reportsPathPickerButton;
     private final Edit fileNamePatternEdit;
@@ -49,7 +49,7 @@ public final class TiffcountMainForm extends Form {
         startPathPickerButton = new ImageButton(this, s(99), s(9), s(4), s(4), "/resources/pipette.png");
         startPathPickerButton.setOnClick(this::startPathPickerButtonClick);
 
-        reportingType = new RadioButtonChoice<>(this, ReportingType.ENTIRE);
+        reportingType = new RadioSelect<>(this, ReportingType.ENTIRE);
         new RadioButton<>(reportingType, s(9), s(17), s(87), s(3),
                 "Verzeichnis für den Bericht:", ReportingType.ENTIRE);
         reportingType.setOnChange(this::reportingTypeChange);
