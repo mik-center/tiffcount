@@ -37,4 +37,18 @@ public class RadioButtonChoice<T> extends FormElement {
         buttonComponent.addSelectionListener(onRadioButtonClick);
         buttonComponent.setSelection(Objects.equals(initialValue, radioButton.value));
     }
+    
+    @Override
+    public void setEnabled(boolean enabled) {
+        if(GUI.currentThreadIsGuiThread()) {
+            for (RadioButton<T> member : members)
+                member.radioButton.setEnabled(enabled);
+        } else {
+            for (RadioButton<T> member : members) {
+                super.form.submitUpdateTask(
+                    () -> member.radioButton.setEnabled(enabled)
+                );
+            }
+        }
+    }
 }

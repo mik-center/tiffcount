@@ -169,6 +169,7 @@ public final class TiffcountMainForm extends Form {
 
         startingPathEdit.setEnabled(false);
         startPathPickerButton.setEnabled(false);
+        reportingType.setEnabled(false);
         reportsPathEdit.setEnabled(false);
         reportsPathPickerButton.setEnabled(false);
         fileNamePatternEdit.setEnabled(false);
@@ -245,6 +246,7 @@ public final class TiffcountMainForm extends Form {
         progressBar.setValue(0);
         startingPathEdit.setEnabled(true);
         startPathPickerButton.setEnabled(true);
+        reportingType.setEnabled(true);
         reportsPathEdit.setEnabled(true);
         reportsPathPickerButton.setEnabled(true);
         fileNamePatternEdit.setEnabled(true);
