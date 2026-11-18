@@ -158,6 +158,7 @@ public class Tiffcount implements Runnable {
                     sendProgressToGui(foldersAndGoodFiles.size(), imageInfos.size(), allRelevantCounter.get());
                 }
             }
+            imageInfos.sort((one, another) -> one.getPath().compareTo(another.getPath()));
 
             String tiffcountName = startingPath.getFileName() != null
                                    ? startingPath.getFileName().toString()
@@ -169,7 +170,7 @@ public class Tiffcount implements Runnable {
                         reportsPath.get().resolve(tiffcountName + "-" + started + "_TiffCount.csv"));
             } else {
                 Map<Path, List<FileData>> imageInfosByDirectory = new HashMap<>();
-                for(FileData fileData:imageInfos)
+                for (FileData fileData : imageInfos)
                     imageInfosByDirectory.computeIfAbsent(fileData.getPath().getParent(),
                             (directory)-> new ArrayList<>()).add(fileData);
                 for (Entry<Path, List<FileData>> directory : imageInfosByDirectory.entrySet()) {
