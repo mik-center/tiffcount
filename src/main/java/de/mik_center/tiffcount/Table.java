@@ -9,6 +9,7 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 import java.util.Map.*;
+import java.util.regex.*;
 
 /**
  * A two-dimensional array of {@code String} with named columns and rows
@@ -26,6 +27,15 @@ public class Table {
         for (String column : columnName) {
             tableColumns.computeIfAbsent(column, caption -> new ArrayList<>());
         }
+    }
+
+    /**
+     * Discards all columns that do not match the pattern.
+     * 
+     * @param pattern pattern of permissible column names
+     */
+    public void retainAll(Pattern pattern) {
+        tableColumns.keySet().removeIf(key -> !pattern.matcher(key).matches());
     }
 
     /**

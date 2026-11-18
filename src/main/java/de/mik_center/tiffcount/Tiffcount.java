@@ -62,11 +62,12 @@ public class Tiffcount implements Runnable {
     private static final String COLUMN_FILE_VERTICAL_RESOLUTION   = "res_y";
     private static final String COLUMN_FILE_COLOR_DEPTH           = "colordepth";
 
-    private Path             startingPath;
-    private Optional<Path>             reportsPath;
-    private Pattern          fileNamePattern;
-    private boolean          analyzeImages;
-    private Consumer<Double> progressMonitor;
+    private Path              startingPath;
+    private Optional<Path>    reportsPath;
+    private Pattern           fileNamePattern;
+    private Optional<Pattern> columnsPattern;
+    private boolean           analyzeImages;
+    private Consumer<Double>  progressMonitor;
 
     /**
      * &#x1F511; Creates a new program object to create Tiffcounts.
@@ -96,6 +97,7 @@ public class Tiffcount implements Runnable {
         this.startingPath = startingPath;
         this.reportsPath = reportsPath;
         this.fileNamePattern = fileNamePattern;
+        this.columnsPattern = columnsPattern;
         this.analyzeImages = analyzeImages;
         this.progressMonitor = progressMonitor;
     }
@@ -161,9 +163,9 @@ public class Tiffcount implements Runnable {
                                    ? startingPath.getFileName().toString()
                                    : startingPath.getRoot().toString().substring(0, 1).toUpperCase();
             if (reportsPath.isPresent()) {
-                writeDirectoriesOverviewCsv(allFolderData, foldersAndGoodFiles,
+                writeDirectoriesOverviewCsv(allFolderData, foldersAndGoodFiles, columnsPattern,
                     reportsPath.get().resolve(tiffcountName + "-" + started + "_FolderCountExtra.csv"));
-                if (analyzeImages) writeImageDetailsCsv(imageInfos,
+                if (analyzeImages) writeImageDetailsCsv(imageInfos, columnsPattern,
                         reportsPath.get().resolve(tiffcountName + "-" + started + "_TiffCount.csv"));
             } else {
                 Map<Path, List<FileData>> imageInfosByDirectory = new HashMap<>();
@@ -171,7 +173,7 @@ public class Tiffcount implements Runnable {
                     imageInfosByDirectory.computeIfAbsent(fileData.getPath().getParent(),
                             (directory)-> new ArrayList<>()).add(fileData);
                 for (Entry<Path, List<FileData>> directory : imageInfosByDirectory.entrySet()) {
-                    writeImageDetailsCsv(directory.getValue(),
+                    writeImageDetailsCsv(directory.getValue(), columnsPattern,
                             directory.getKey().resolve(tiffcountName + "-" + started + "_TiffCount.csv"));
                 }
             }
@@ -259,9 +261,11 @@ public class Tiffcount implements Runnable {
     }
 
     private static void writeDirectoriesOverviewCsv(Map<Path, DirectoryData> allFolderData,
-            Map<Path, Collection<Path>> foldersAndGoodFiles, Path fileToWrite) throws IOException {
+            Map<Path, Collection<Path>> foldersAndGoodFiles, Optional<Pattern> columnsPattern,
+            Path fileToWrite) throws IOException {
         assert allFolderData != null : "'allFolderData' must not be null";
         assert foldersAndGoodFiles != null : "'foldersAndGoodFiles' must not be null";
+        assert columnsPattern != null : "'columnsPattern' optional must not be null";
         assert fileToWrite != null : "'fileToWrite' must not be null";
 
         // calculate number of 'folder' columns
@@ -305,11 +309,14 @@ public class Tiffcount implements Runnable {
         }
 
         // write file
+        if (columnsPattern.isPresent()) folderCount.retainAll(columnsPattern.get());
         folderCount.toCSV(fileToWrite);
     }
 
-    private static void writeImageDetailsCsv(List<FileData> imageInfos, Path fileToWrite) throws IOException {
+    private static void writeImageDetailsCsv(List<FileData> imageInfos,
+            Optional<Pattern> columnsPattern, Path fileToWrite) throws IOException {
         assert imageInfos != null : "'imageInfos' must not be null";
+        assert columnsPattern != null : "'columnsPattern' optional must not be null";
         assert fileToWrite != null : "'fileToWrite' must not be null";
 
         // calculate number of 'folder' columns
@@ -373,6 +380,7 @@ public class Tiffcount implements Runnable {
         }
 
         // write file
+        if (columnsPattern.isPresent()) tiffCount.retainAll(columnsPattern.get());
         tiffCount.toCSV(fileToWrite);
     }
 
