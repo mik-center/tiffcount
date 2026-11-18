@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Event;
  */
 public final class TiffcountMainForm extends Form {
 
-    private static final String PROGRAM_CAPTION = "MIK * Tiffcount v. 2.1.0-SNAPSHOT";
+    private static final String PROGRAM_CAPTION = "MIK * Tiffcount v. 2.1.0";
 
     private final Edit startingPathEdit;
     private final ImageButton startPathPickerButton;
