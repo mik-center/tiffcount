@@ -3,9 +3,12 @@
 
 package de.mik_center.tiffcount;
 
+import static java.lang.Thread.*;
+import static java.nio.file.FileVisitResult.*;
+import static java.util.concurrent.TimeUnit.*;
+
 import java.io.*;
 import java.nio.file.*;
-import static java.nio.file.FileVisitResult.*;
 import java.nio.file.attribute.*;
 import java.time.*;
 import java.time.format.*;
@@ -16,15 +19,15 @@ import java.util.concurrent.atomic.*;
 import java.util.function.*;
 import java.util.regex.*;
 
-import com.drew.imaging.*;
-import com.drew.metadata.*;
-
-import com.github.jpeg2000.*;
-import jj2000.j2k.io.*;
-
 import org.apache.pdfbox.*;
 import org.apache.pdfbox.pdmodel.*;
 import org.apache.pdfbox.pdmodel.encryption.*;
+
+import com.drew.imaging.*;
+import com.drew.metadata.*;
+import com.github.jpeg2000.*;
+
+import jj2000.j2k.io.*;
 
 /**
  * &#x1F511; The program that creates the Tiffcount. This runs in its own
@@ -150,11 +153,31 @@ public class Tiffcount implements Runnable {
             List<FileData> imageInfos = new ArrayList<>(allRelevantCounter.get() - foldersAndGoodFiles.size());
             for (Entry<Path, Collection<Path>> folder : foldersAndGoodFiles.entrySet()) {
                 for (Path imagePath : folder.getValue()) {
-                    FileData imageData = readFileSystemFileProperties(imagePath);
-                    if (analyzeImages) imageData = readImagePropertiesGeneralized(imageData);
-                    imageInfos.add(imageData);
-                    DirectoryData aboutContainingFolder = allFolderData.get(imagePath.getParent());
-                    aboutContainingFolder.setSize(aboutContainingFolder.getSize() + imageData.getSize());
+                    IOException ioException = null;
+                    long when = -1;
+                    do {
+                        try {
+                            FileData imageData = readFileSystemFileProperties(imagePath);
+                            if (analyzeImages) imageData = readImagePropertiesGeneralized(imageData);
+                            imageInfos.add(imageData);
+                            DirectoryData aboutContainingFolder = allFolderData.get(imagePath.getParent());
+                            aboutContainingFolder.setSize(aboutContainingFolder.getSize() + imageData.getSize());
+                            if (ioException != null) ioException = null;
+                        } catch (IOException e) {
+                            if (ioException == null) {
+                                when = System.nanoTime();
+                                sendProgressToGui(0, 0, 1);
+                                ioException = e;
+                            }
+                            if (SECONDS.convert(System.nanoTime() - when, NANOSECONDS) >= 60) throw ioException;
+                            try {
+                                sleep(Duration.ofSeconds(1));
+                            } catch (InterruptedException __) {
+                                currentThread().interrupt();
+                                throw ioException;
+                            }
+                        }
+                    } while (ioException != null);
                     sendProgressToGui(foldersAndGoodFiles.size(), imageInfos.size(), allRelevantCounter.get());
                 }
             }

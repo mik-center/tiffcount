@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Event;
  */
 public final class TiffcountMainForm extends Form {
 
-    private static final String PROGRAM_CAPTION = "MIK * Tiffcount v. 2.1.0";
+    private static final String PROGRAM_CAPTION = "MIK * Tiffcount v. 2.2.0";
 
     private final Edit startingPathEdit;
     private final ImageButton startPathPickerButton;
@@ -46,7 +46,7 @@ public final class TiffcountMainForm extends Form {
         startingPathEdit.setOnChange(this::startingPathEditChange);
         startingPathEdit.setSelection(0, startingPathEdit.getValue().length());
 
-        startPathPickerButton = new ImageButton(this, s(99), s(9), s(4), s(4), "/pipette.png");
+        startPathPickerButton = new ImageButton(this, s(99), s(9), s(4), s(4), "/resources/pipette.png");
         startPathPickerButton.setOnClick(this::startPathPickerButtonClick);
 
         reportingType = new RadioButtonChoice<>(this, ReportingType.ENTIRE);
@@ -57,7 +57,7 @@ public final class TiffcountMainForm extends Form {
         reportsPathEdit = new Edit(this, s(13), s(20), s(83), s(4), reportsPathAutomaticValue);
         reportsPathEdit.setSelection(0, reportsPathEdit.getValue().length());
 
-        reportsPathPickerButton = new ImageButton(this, s(99), s(20), s(4), s(4), "/pipette.png");
+        reportsPathPickerButton = new ImageButton(this, s(99), s(20), s(4), s(4), "/resources/pipette.png");
         reportsPathPickerButton.setOnClick(this::reportsPathPickerButtonClick);
 
         new RadioButton<>(reportingType, s(9), s(25), s(87), s(3),
