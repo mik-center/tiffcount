@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Event;
  */
 public final class TiffcountMainForm extends Form {
 
-    private static final String PROGRAM_CAPTION = "MIK * Tiffcount v. 2.0.3";
+    private static final String PROGRAM_CAPTION = "MIK * Tiffcount v. 2.1.0-SNAPSHOT";
 
     private final Edit startingPathEdit;
     private final ImageButton startPathPickerButton;
@@ -35,37 +35,37 @@ public final class TiffcountMainForm extends Form {
 
     public TiffcountMainForm() {
         super(PROGRAM_CAPTION, false);
-        super.setInnerSize(s(112), s(69.28));
+        super.setInnerSize(s(112), s(76));
 
-        new Label(this, s(9), s(9), s(87), s(3), "Startverzeichnis:");
+        new Label(this, s(9), s(6), s(87), s(3), "Startverzeichnis:");
 
         reportsPathAutomaticValue = System.getProperty("user.dir");
-        startingPathEdit = new Edit(this, s(9), s(12), s(87), s(4), reportsPathAutomaticValue);
+        startingPathEdit = new Edit(this, s(9), s(9), s(87), s(4), reportsPathAutomaticValue);
         startingPathEdit.setOnChange(this::startingPathEditChange);
         startingPathEdit.setSelection(0, startingPathEdit.getValue().length());
 
-        startPathPickerButton = new ImageButton(this, s(99), s(12), s(4), s(4), "/pipette.png");
+        startPathPickerButton = new ImageButton(this, s(99), s(9), s(4), s(4), "/pipette.png");
         startPathPickerButton.setOnClick(this::startPathPickerButtonClick);
 
-        new Label(this, s(9), s(19), s(87), s(3), "Verzeichnis für den Bericht:");
+        new Label(this, s(13), s(17), s(83), s(3), "Verzeichnis für den Bericht:");
 
-        reportsPathEdit = new Edit(this, s(9), s(22), s(87), s(4), reportsPathAutomaticValue);
+        reportsPathEdit = new Edit(this, s(13), s(20), s(83), s(4), reportsPathAutomaticValue);
         reportsPathEdit.setSelection(0, reportsPathEdit.getValue().length());
 
-        reportsPathPickerButton = new ImageButton(this, s(99), s(22), s(4), s(4), "/pipette.png");
+        reportsPathPickerButton = new ImageButton(this, s(99), s(20), s(4), s(4), "/pipette.png");
         reportsPathPickerButton.setOnClick(this::reportsPathPickerButtonClick);
 
-        new Label(this, s(9), s(29), s(94), s(3), "Dateien auswerten:");
+        new Label(this, s(9), s(32), s(94), s(3), "Dateien auswerten:");
 
-        fileNamePatternEdit = new Edit(this, s(9), s(32), s(94), s(4), "*.jpg, *.tif, *.jp2, *.gif, *.png, *.pdf");
+        fileNamePatternEdit = new Edit(this, s(9), s(35), s(94), s(4), "*.jpg, *.tif, *.jp2, *.gif, *.png, *.pdf");
 
-        analyzeFoldersButton = new Button(this, s(9), s(42), s(45), s(6), "Nur Ordner analysieren");
+        analyzeFoldersButton = new Button(this, s(9), s(55), s(45), s(6), "Nur Ordner analysieren");
         analyzeFoldersButton.setOnClick(this::analyzeFoldersButtonClick);
 
-        countFoldersAndFilesButton = new Button(this, s(58), s(42), s(45), s(6), "Dateien und Ordner zählen");
+        countFoldersAndFilesButton = new Button(this, s(58), s(55), s(45), s(6), "Dateien und Ordner zählen");
         countFoldersAndFilesButton.setOnClick(this::countFoldersAndFilesButtonClick);
 
-        progressBar = new Gauge(this, s(9), s(55), s(94), s(4), 385, 0);
+        progressBar = new Gauge(this, s(9), s(66), s(94), s(4), 385, 0);
     }
 
     /* Scales the specified size to a value in pixels. This function is final
