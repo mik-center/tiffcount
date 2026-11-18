@@ -166,7 +166,6 @@ public final class TiffcountMainForm extends Form {
         Path startingPath = Paths.get(startingPathEdit.getValue());
         Optional<Path> reportsPath = Optional.of(Paths.get(reportsPathEdit.getValue()));
         Pattern fileNamePattern =  Pattern.compile(createFileFilter(fileNamePatternEdit.getValue()));
-        Optional<Pattern> columnsPattern = Optional.empty();
 
         startingPathEdit.setEnabled(false);
         startPathPickerButton.setEnabled(false);
@@ -176,7 +175,7 @@ public final class TiffcountMainForm extends Form {
         analyzeFoldersButton.setEnabled(false);
         countFoldersAndFilesButton.setEnabled(false);
 
-        Tiffcount tiffcount = new Tiffcount(startingPath, reportsPath, fileNamePattern, columnsPattern,
+        Tiffcount tiffcount = new Tiffcount(startingPath, reportsPath, fileNamePattern, createColumnsFilterIfAny(),
                 analyzeImages, this::updateProgress);
         Thread tiffcountThread = new Thread() {
             @Override
@@ -195,15 +194,8 @@ public final class TiffcountMainForm extends Form {
     private static String createFileFilter(String value) {
         assert value != null : "'value' must not be null";
 
-        String regex = Arrays.stream(value.split(","))
-            .map(String::trim)
-            .map(string -> string.replace(".", "\\."))
-            .map(string -> string.replace("?", "."))
-            .map(string -> string.replace("*", ".*"))
-            .collect(Collectors.joining("|"));
-
         StringBuilder builder = new StringBuilder();
-        for (int codePoint : regex.codePoints().toArray()) {
+        for (int codePoint : filterToRegex(value).codePoints().toArray()) {
             String glyph = Character.toString(codePoint);
             String upper = glyph.toUpperCase();
             String lower = glyph.toLowerCase();
@@ -217,6 +209,21 @@ public final class TiffcountMainForm extends Form {
             }
         }
         return builder.toString();
+    }
+
+    private Optional<Pattern> createColumnsFilterIfAny() {
+        String input = columnFilterEdit.getValue();
+        return input.isBlank() ? Optional.empty() : Optional.of(Pattern.compile(filterToRegex(input)));
+    }
+
+    private static String filterToRegex(String value) {
+        String regex = Arrays.stream(value.split(","))
+                .map(String::trim)
+                .map(string -> string.replace(".", "\\."))
+                .map(string -> string.replace("?", "."))
+                .map(string -> string.replace("*", ".*"))
+                .collect(Collectors.joining("|"));
+        return regex;
     }
 
     /**
