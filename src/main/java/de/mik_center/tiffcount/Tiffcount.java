@@ -63,7 +63,7 @@ public class Tiffcount implements Runnable {
     private static final String COLUMN_FILE_COLOR_DEPTH           = "colordepth";
 
     private Path             startingPath;
-    private Path             reportsPath;
+    private Optional<Path>             reportsPath;
     private Pattern          fileNamePattern;
     private boolean          analyzeImages;
     private Consumer<Double> progressMonitor;
@@ -72,20 +72,26 @@ public class Tiffcount implements Runnable {
      * &#x1F511; Creates a new program object to create Tiffcounts.
      * 
      * @param startingPath    directory from which the directories are searched
-     * @param reportsPath     directory in which the report is written
+     * @param reportsPath     directory in which the report is written. If
+     *                        empty, a report is written to each individual
+     *                        image directory.
      * @param fileNamePattern pattern specifying which files should be counted
+     * @param columnsPattern  pattern specifying which columns should be
+     *                        included in the report
      * @param analyzeImages   whether the overview of image metadata should be
      *                        created
      * @param progressMonitor monitor to which progress is communicated, may be
      *                        {@code null}
      */
-    public Tiffcount(Path startingPath, Path reportsPath, Pattern fileNamePattern, boolean analyzeImages,
-            Consumer<Double> progressMonitor) {
+    public Tiffcount(Path startingPath, Optional<Path> reportsPath, Pattern fileNamePattern,
+            Optional<Pattern> columnsPattern, boolean analyzeImages, Consumer<Double> progressMonitor) {
         assert startingPath != null : "'startingPath' must not be null";
-        assert reportsPath != null : "'reportsPath' must not be null";
+        assert reportsPath != null : "'reportsPath' optional must not be null";
         assert fileNamePattern != null : "'fileNamePattern' must not be null";
+        assert columnsPattern != null : "'columnsPattern' optional must not be null";
         assert Files.isDirectory(startingPath) : "'startingPath' must point to an existing directory";
-        assert Files.isDirectory(reportsPath) : "'reportsPath' must point to an existing directory";
+        assert reportsPath.isEmpty() || Files.isDirectory(reportsPath.get())
+                : "'reportsPath' must point to an existing directory";
 
         this.startingPath = startingPath;
         this.reportsPath = reportsPath;
@@ -154,11 +160,13 @@ public class Tiffcount implements Runnable {
             String tiffcountName = startingPath.getFileName() != null
                                    ? startingPath.getFileName().toString()
                                    : startingPath.getRoot().toString().substring(0, 1).toUpperCase();
-            writeDirectoriesOverviewCsv(allFolderData, foldersAndGoodFiles,
-                reportsPath.resolve(tiffcountName + "-" + started + "_FolderCountExtra.csv"));
-
-            if (analyzeImages)
-                writeImageDetailsCsv(imageInfos, reportsPath.resolve(tiffcountName + "-" + started + "_TiffCount.csv"));
+            if (reportsPath.isPresent()) {
+                writeDirectoriesOverviewCsv(allFolderData, foldersAndGoodFiles,
+                    reportsPath.get().resolve(tiffcountName + "-" + started + "_FolderCountExtra.csv"));
+    
+                if (analyzeImages) writeImageDetailsCsv(imageInfos,
+                        reportsPath.get().resolve(tiffcountName + "-" + started + "_TiffCount.csv"));
+            }
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }

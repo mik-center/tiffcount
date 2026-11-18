@@ -164,8 +164,9 @@ public final class TiffcountMainForm extends Form {
 
     private void startEvaluation(boolean analyzeImages) {
         Path startingPath = Paths.get(startingPathEdit.getValue());
-        Path reportsPath = Paths.get(reportsPathEdit.getValue());
+        Optional<Path> reportsPath = Optional.of(Paths.get(reportsPathEdit.getValue()));
         Pattern fileNamePattern =  Pattern.compile(createFileFilter(fileNamePatternEdit.getValue()));
+        Optional<Pattern> columnsPattern = Optional.empty();
 
         startingPathEdit.setEnabled(false);
         startPathPickerButton.setEnabled(false);
@@ -175,7 +176,8 @@ public final class TiffcountMainForm extends Form {
         analyzeFoldersButton.setEnabled(false);
         countFoldersAndFilesButton.setEnabled(false);
 
-        Tiffcount tiffcount = new Tiffcount(startingPath, reportsPath, fileNamePattern, analyzeImages, this::updateProgress);
+        Tiffcount tiffcount = new Tiffcount(startingPath, reportsPath, fileNamePattern, columnsPattern,
+                analyzeImages, this::updateProgress);
         Thread tiffcountThread = new Thread() {
             @Override
             public void run() {
