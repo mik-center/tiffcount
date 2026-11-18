@@ -24,9 +24,11 @@ public final class TiffcountMainForm extends Form {
 
     private final Edit startingPathEdit;
     private final ImageButton startPathPickerButton;
+    private final RadioButtonChoice<ReportingType> reportingType;
     private final Edit reportsPathEdit;
     private final ImageButton reportsPathPickerButton;
     private final Edit fileNamePatternEdit;
+    private final Edit columnFilterEdit;
     private final Button analyzeFoldersButton;
     private final Button countFoldersAndFilesButton;
     private final Gauge progressBar;
@@ -47,6 +49,9 @@ public final class TiffcountMainForm extends Form {
         startPathPickerButton = new ImageButton(this, s(99), s(9), s(4), s(4), "/pipette.png");
         startPathPickerButton.setOnClick(this::startPathPickerButtonClick);
 
+        reportingType = new RadioButtonChoice<>(this, ReportingType.ENTIRE);
+        new RadioButton<>(reportingType, s(9), s(17), s(3), s(3), ReportingType.ENTIRE);
+        
         new Label(this, s(13), s(17), s(83), s(3), "Verzeichnis für den Bericht:");
 
         reportsPathEdit = new Edit(this, s(13), s(20), s(83), s(4), reportsPathAutomaticValue);
@@ -55,9 +60,17 @@ public final class TiffcountMainForm extends Form {
         reportsPathPickerButton = new ImageButton(this, s(99), s(20), s(4), s(4), "/pipette.png");
         reportsPathPickerButton.setOnClick(this::reportsPathPickerButtonClick);
 
+        new RadioButton<>(reportingType, s(9), s(17), s(3), s(3), ReportingType.BY_DIRECTORY);
+
+        new Label(this, s(13), s(25), s(83), s(3), "Berichte verzeichnisweise ins gleiche Verzeichnis");
+        
         new Label(this, s(9), s(32), s(94), s(3), "Dateien auswerten:");
 
         fileNamePatternEdit = new Edit(this, s(9), s(35), s(94), s(4), "*.jpg, *.tif, *.jp2, *.gif, *.png, *.pdf");
+
+        new Label(this, s(9), s(43), s(94), s(3), "Nur diese Spalten:");
+
+        columnFilterEdit = new Edit(this, s(9), s(46), s(94), s(4), "");
 
         analyzeFoldersButton = new Button(this, s(9), s(55), s(45), s(6), "Nur Ordner analysieren");
         analyzeFoldersButton.setOnClick(this::analyzeFoldersButtonClick);
