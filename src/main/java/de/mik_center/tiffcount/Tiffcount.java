@@ -163,9 +163,17 @@ public class Tiffcount implements Runnable {
             if (reportsPath.isPresent()) {
                 writeDirectoriesOverviewCsv(allFolderData, foldersAndGoodFiles,
                     reportsPath.get().resolve(tiffcountName + "-" + started + "_FolderCountExtra.csv"));
-    
                 if (analyzeImages) writeImageDetailsCsv(imageInfos,
                         reportsPath.get().resolve(tiffcountName + "-" + started + "_TiffCount.csv"));
+            } else {
+                Map<Path, List<FileData>> imageInfosByDirectory = new HashMap<>();
+                for(FileData fileData:imageInfos)
+                    imageInfosByDirectory.computeIfAbsent(fileData.getPath().getParent(),
+                            (directory)-> new ArrayList<>()).add(fileData);
+                for (Entry<Path, List<FileData>> directory : imageInfosByDirectory.entrySet()) {
+                    writeImageDetailsCsv(directory.getValue(),
+                            directory.getKey().resolve(tiffcountName + "-" + started + "_TiffCount.csv"));
+                }
             }
         } catch (IOException e) {
             throw new UncheckedIOException(e);
@@ -360,7 +368,9 @@ public class Tiffcount implements Runnable {
                 for (Entry<String, String> otherData : image.getMetadata(dataGroup).entrySet()) {
                     String columnName = dataGroup.getPrefix().concat(otherData.getKey());
                     tiffCount.set(row, columnName, otherData.getValue());
-        }   }   }
+                }
+            }
+        }
 
         // write file
         tiffCount.toCSV(fileToWrite);
