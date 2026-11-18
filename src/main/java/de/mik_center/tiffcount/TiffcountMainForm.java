@@ -52,6 +52,7 @@ public final class TiffcountMainForm extends Form {
         reportingType = new RadioButtonChoice<>(this, ReportingType.ENTIRE);
         new RadioButton<>(reportingType, s(9), s(17), s(87), s(3),
                 "Verzeichnis für den Bericht:", ReportingType.ENTIRE);
+        reportingType.setOnChange(this::reportingTypeChange);
 
         reportsPathEdit = new Edit(this, s(13), s(20), s(83), s(4), reportsPathAutomaticValue);
         reportsPathEdit.setSelection(0, reportsPathEdit.getValue().length());
@@ -126,6 +127,12 @@ public final class TiffcountMainForm extends Form {
             startingPathEdit.setValue(selectedDir);
             startingPathEditChange(new ModifyEvent(event));
         }
+    }
+
+    protected void reportingTypeChange(ReportingType actual) {
+        boolean entireReport = actual.equals(ReportingType.ENTIRE);
+        reportsPathEdit.setEnabled(entireReport);
+        analyzeFoldersButton.setEnabled(entireReport);
     }
 
     /**
@@ -247,13 +254,14 @@ public final class TiffcountMainForm extends Form {
      */
     public void onComplete() {
         progressBar.setValue(0);
+        boolean entireReport = reportingType.getValue().equals(ReportingType.ENTIRE);
         startingPathEdit.setEnabled(true);
         startPathPickerButton.setEnabled(true);
         reportingType.setEnabled(true);
-        reportsPathEdit.setEnabled(true);
+        if (entireReport) reportsPathEdit.setEnabled(true);
         reportsPathPickerButton.setEnabled(true);
         fileNamePatternEdit.setEnabled(true);
-        analyzeFoldersButton.setEnabled(true);
+        if (entireReport) analyzeFoldersButton.setEnabled(true);
         countFoldersAndFilesButton.setEnabled(true);
     }
 

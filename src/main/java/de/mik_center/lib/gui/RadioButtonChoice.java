@@ -4,6 +4,7 @@
 package de.mik_center.lib.gui;
 
 import java.util.*;
+import java.util.function.*;
 
 import org.eclipse.swt.events.*;
 
@@ -13,6 +14,8 @@ public class RadioButtonChoice<T> extends FormElement {
     private T value;
 
     private final Collection<RadioButton<T>> members = new ArrayList<>();
+    private Consumer<T> onChangeHandler;
+    
     private final SelectionAdapter onRadioButtonClick = new SelectionAdapter() {
         @Override
         public void widgetSelected(SelectionEvent e) {
@@ -22,6 +25,7 @@ public class RadioButtonChoice<T> extends FormElement {
                 member.radioButton.setSelection(isClicked);
                 if(isClicked) value = member.value;
             }
+            if (onChangeHandler != null) onChangeHandler.accept(value);
         }
     };
 
@@ -54,5 +58,9 @@ public class RadioButtonChoice<T> extends FormElement {
 
     public T getValue() {
         return value;
+    }
+
+    public void setOnChange(Consumer<T> onChangeHandler) {
+        this.onChangeHandler = onChangeHandler;
     }
 }
