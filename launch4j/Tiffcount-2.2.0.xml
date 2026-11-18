@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch4jConfig>
+  <dontWrapJar>false</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>C:\Users\matthias.ronge\Documents\Projekte\2026\intern\TiffCount_neu\Tiffcount.ws\tiffcount\target\tiffcount-2.2.0.jar</jar>
+  <outfile>C:\Users\matthias.ronge\Documents\Projekte\2026\intern\TiffCount_neu\runnable\Tiffcount-2.2.0.exe</outfile>
+  <errTitle>Fehler</errTitle>
+  <cmdLine>5G</cmdLine>
+  <chdir>.</chdir>
+  <priority>normal</priority>
+  <downloadUrl>https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u504-b01/OpenJDK8U-jdk_x64_windows_hotspot_8u504b01.msi</downloadUrl>
+  <supportUrl>https://learn.microsoft.com/de-de/java/openjdk/download</supportUrl>
+  <stayAlive>false</stayAlive>
+  <restartOnCrash>false</restartOnCrash>
+  <manifest></manifest>
+  <icon></icon>
+  <jre>
+    <path>%JAVA_HOME%;%PATH%</path>
+    <requiresJdk>false</requiresJdk>
+    <requires64Bit>false</requires64Bit>
+    <minVersion>1.8</minVersion>
+    <maxVersion></maxVersion>
+    <maxHeapSize>5120</maxHeapSize>
+  </jre>
+  <versionInfo>
+    <fileVersion>2.2.0.0</fileVersion>
+    <txtFileVersion>2.2.0</txtFileVersion>
+    <fileDescription>MIK * Tiffcount v. 2.2.0</fileDescription>
+    <copyright>Licensed under the Apache License, Version 2.0</copyright>
+    <productVersion>2.2.0.0</productVersion>
+    <txtProductVersion>2.2.0</txtProductVersion>
+    <productName>Tiffcount</productName>
+    <companyName>MIK-CENTER GmbH</companyName>
+    <internalName>Tiffcount-2_2_0</internalName>
+    <originalFilename>Tiffcount-2.2.0.exe</originalFilename>
+    <trademarks></trademarks>
+    <language>GERMAN</language>
+  </versionInfo>
+  <messages>
+    <startupErr>Die Anwendung konnte nicht gestartet werden.</startupErr>
+    <jreNotFoundErr>Diese Anwendung benötigt ein Java Runtime Environment. Informieren Sie einen Administrator.</jreNotFoundErr>
+    <jreVersionErr>Diese Anwendung benötigt ein Java Runtime Environment (mind. 1.8).  Informieren Sie einen Administrator.</jreVersionErr>
+    <launcherErr>Das Betriebssystem zeigt auf ein nicht existierendes oder beschädigtes Java Runtime Environment. Informieren Sie einen Administrator.</launcherErr>
+    <instanceAlreadyExistsMsg>Die Anwendung läuft bereits in einem anderen Prozess. Bitte beenden Sie zunächst diesen Prozess!</instanceAlreadyExistsMsg>
+  </messages>
+</launch4jConfig>
