@@ -50,9 +50,8 @@ public final class TiffcountMainForm extends Form {
         startPathPickerButton.setOnClick(this::startPathPickerButtonClick);
 
         reportingType = new RadioButtonChoice<>(this, ReportingType.ENTIRE);
-        new RadioButton<>(reportingType, s(9), s(17), s(3), s(3), ReportingType.ENTIRE);
-        
-        new Label(this, s(13), s(17), s(83), s(3), "Verzeichnis für den Bericht:");
+        new RadioButton<>(reportingType, s(9), s(17), s(87), s(3),
+                "Verzeichnis für den Bericht:", ReportingType.ENTIRE);
 
         reportsPathEdit = new Edit(this, s(13), s(20), s(83), s(4), reportsPathAutomaticValue);
         reportsPathEdit.setSelection(0, reportsPathEdit.getValue().length());
@@ -60,10 +59,9 @@ public final class TiffcountMainForm extends Form {
         reportsPathPickerButton = new ImageButton(this, s(99), s(20), s(4), s(4), "/pipette.png");
         reportsPathPickerButton.setOnClick(this::reportsPathPickerButtonClick);
 
-        new RadioButton<>(reportingType, s(9), s(17), s(3), s(3), ReportingType.BY_DIRECTORY);
+        new RadioButton<>(reportingType, s(9), s(25), s(87), s(3),
+                "Berichte verzeichnisweise ins gleiche Verzeichnis", ReportingType.BY_DIRECTORY);
 
-        new Label(this, s(13), s(25), s(83), s(3), "Berichte verzeichnisweise ins gleiche Verzeichnis");
-        
         new Label(this, s(9), s(32), s(94), s(3), "Dateien auswerten:");
 
         fileNamePatternEdit = new Edit(this, s(9), s(35), s(94), s(4), "*.jpg, *.tif, *.jp2, *.gif, *.png, *.pdf");
