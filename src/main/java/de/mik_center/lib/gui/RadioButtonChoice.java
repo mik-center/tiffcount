@@ -51,4 +51,8 @@ public class RadioButtonChoice<T> extends FormElement {
             }
         }
     }
+
+    public T getValue() {
+        return value;
+    }
 }

@@ -164,7 +164,10 @@ public final class TiffcountMainForm extends Form {
 
     private void startEvaluation(boolean analyzeImages) {
         Path startingPath = Paths.get(startingPathEdit.getValue());
-        Optional<Path> reportsPath = Optional.of(Paths.get(reportsPathEdit.getValue()));
+        Optional<Path> reportsPath =
+            Objects.equals(reportingType.getValue(), ReportingType.ENTIRE)
+                ? Optional.of(Paths.get(reportsPathEdit.getValue()))
+                : Optional.empty();
         Pattern fileNamePattern =  Pattern.compile(createFileFilter(fileNamePatternEdit.getValue()));
 
         startingPathEdit.setEnabled(false);
